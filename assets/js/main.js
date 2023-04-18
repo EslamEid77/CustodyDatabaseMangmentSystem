@@ -319,3 +319,42 @@
   }
 
 })();
+/**
+   * Login file
+   */
+const url = "http://suezcanal26-001-site1.atempurl.com/";
+let tokenuser = "";
+const form = document.getElementById('row g-3 needs-validation');
+const submitButton=document.querySelector('button[type="submit"]');
+submitButton.addEventListener('click',function(){
+  var myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+  var urlencoded = new URLSearchParams();
+        urlencoded.append("UserName", form.username.value);
+        urlencoded.append("Password", form.password.value);
+        urlencoded.append("grant_type", "password");
+        var requestOptions = {
+          method: 'POST',
+          headers: myHeaders,
+          body: urlencoded,
+          redirect: 'follow'
+        };
+        
+        fetch(url+"token", requestOptions)
+          .then(response => response.text())
+          .then((result) => {
+            const data = JSON.parse(result);
+            tokenuser = data.access_token;
+            console.log("Access token:", tokenuser);
+            document.cookie = `access_token=${tokenuser}; path=/`;
+          })
+          .catch(error => console.log('error', error));
+event.preventDefault();
+const cookieValue = document.cookie
+  .split("; ")
+  .find((row) => row.startsWith("access_token="))
+  ?.split("=")[1];
+
+//console.log("Access token:", cookieValue);
+});
